@@ -1,0 +1,20 @@
+function result = fit(c, dimension, left, result)
+    if isempty(left)
+        return
+    end
+    for i = 1:c(dimension)
+        nextCandidate =c(dimension, i+1);
+        if ismember(nextCandidate, left)
+            result(dimension) = nextCandidate;
+            %wheather or not finding the solution
+            if(dimension == length(c))
+                disp(result);
+                return
+            end
+            result = fit(c, dimension+1, setdiff(left, nextCandidate), result);
+            if isempty(setdiff([s:size], result))
+                break;
+            end
+         end    
+    end
+    
