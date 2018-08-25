@@ -1,6 +1,7 @@
 clc, clear;
-%c = [2, 3, 5, 7; 3, 5, 2, 8; 9, 5, 7, 8; 2, 2, 3, 9];
+% c = [2, 3, 5, 7; 3, 5, 2, 8; 9, 5, 7, 8; 2, 2, 3, 9];
 c = [12, 7, 9, 7, 9; 8, 9,  6, 6, 6; 7, 17, 12, 14, 12; 15, 14, 6, 6, 10; 4, 10, 7, 10, 6 ];
+% c = [4,8,7,15,12;7,9,17,14,10;6,9,12,8,7;6,7,14,6,10;6,9,12,10,6]; % end up with endless loop
 %function result = Hungarian(c)
 size = length(c);
 %pre-operation
@@ -57,44 +58,45 @@ while true
     markedLine(left) = 1;
     %this loop is aimed to find the possible zero
     %find all marked lines
-    tmp = find(markedLine == 1);
-    while true
-        %for i = 1:length(tempLine)
-       %%
-        %step1
-        %find the line(subscript)
-        tmp = find(tempresult(:, 1) == tmp);
-        erase = tmp;
-        %find the column
-        tmp = tempresult(tmp, 2);
-        %find weather it is terminate
-        if isempty(tmp)
-            break;
-        end
-        %mark the column
-        %flag(:,tmp) = 1;
-        markedColumn(tmp) = 1;
-        %erase the line
-        tempresult(erase, :) = [];
+    temp_marked = find(markedLine == 1);
+    for i = 1:length(temp_marked)
+        tmp = temp_marked(i);
+        while true
+           %%
+            %step1
+            %find the line(subscript)
+            tmp = find(tempresult(:, 1) == tmp);
+            erase = tmp;
+            %find the colum
+            tmp = tempresult(tmp, 2);
+            %find weather it is terminate
+            if isempty(tmp)
+                break;
+            end
+            %mark the column
+            %flag(:,tmp) = 1;
+            markedColumn(tmp) = 1;
+            %erase the line
+            tempresult(erase, :) = [];
 
-       %%
-        %step2
-        %find the line(subscript)
-        tmp = find(tempresult(:, 2) == tmp);
-        erase = tmp;
-        %find the line
-        tmp = tempresult(tmp, 1);
-        %find weather it is terminate
-        if isempty(tmp)
-            break;
+           %%
+            %step2
+            %find the line(subscript)
+            tmp = find(tempresult(:, 2) == tmp);
+            erase = tmp;
+            %find the line
+            tmp = tempresult(tmp, 1);
+            %find weather it is terminate
+            if isempty(tmp)
+                break;
+            end
+            %mark the line
+            %flag(tmp, :) = 1;
+            markedLine(tmp) = 1;
+            %erase the column
+            tempresult(erase, :) = [];
         end
-        %mark the line
-        %flag(tmp, :) = 1;
-        markedLine(tmp) = 1;
-        %erase the column
-        tempresult(erase, :) = [];
     end
-    %end
 
     %%
      %find the minimal number
@@ -114,7 +116,7 @@ while true
          y = fix((temp-1)/5) + 1;
          x = temp - (y-1)*5;
      %end
-     tempresult = [result; [x', y']];
+     tempresult = [result; [x, y]];
      %check the answer                                             
      for i = 1:length(x)
          z(x(i), 1) = z(x(i), 1) + 1;
